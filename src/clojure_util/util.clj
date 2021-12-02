@@ -116,7 +116,7 @@
 
 (defn deaccent
   "Remove accent from string.
-   For example: (clojure-util.deaccent \"Policía\")->\"Policia\""
+   For example: (deaccent \"Policía\")->\"Policia\""
   [str]
   (let [normalized (java.text.Normalizer/normalize str java.text.Normalizer$Form/NFD)]
     (string/replace normalized #"\p{InCombiningDiacriticalMarks}+" "")))
