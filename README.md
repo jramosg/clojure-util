@@ -1,6 +1,8 @@
 # clojure-util
 
-FIXME: description
+Clojure utils in `clojure-util.util` namespace
+
+Datomic utils in 
 
 ## Installation
 
