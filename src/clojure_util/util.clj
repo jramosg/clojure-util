@@ -37,9 +37,9 @@
   "Returns true if a string contains one or less negative signs. False if not.
   See `clojure-util.util-test/not-more-than-one-negative-sign-test` for examples."
   [s]
-  (let [negative-sing? #{\-}]
+  (let [negative-string? #{\-}]
     (->
-      (filter negative-sing? s)
+      (filter negative-string? s)
       count
       (<= 1))))
 
