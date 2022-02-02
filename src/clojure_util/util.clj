@@ -5,59 +5,69 @@
     [clojure.string :as string]))
 
 (defn attach-namespace-to-keys
-  "This function attaches namespace keywords to a map
-  For example:
-  (attach-namespace-to-keys
-    {:first-name \"Jon\"
-     :last-name \"Ramos\"
-     :birthplace \"Urnieta\"
-     :zipcode \"12345\"}
-     :user
-     :except [:zipcode])
-    =>
-    {:zipcode \"12345\",
-     :user/first-name \"Jon\",
-     :user/last-name \"Ramos\",
-     :user/birthplace \"Urnieta\"}"
+  "This function attaches namespace keywords to a map.
+  See `clojure-util.util-test/attach-namespace-to-keys-test` for examples."
   [my-map namespace & {:keys [except]}]
   (let [keywords-to-rename (remove (set except) (keys my-map))
         new-keywords (mapv #(keyword (name namespace) (name %))
                            keywords-to-rename)]
     (set/rename-keys my-map (zipmap keywords-to-rename new-keywords))))
 
+
+(defn not-more-than-one-decimal-separator?
+  "Returns true if a string contains one or less decimal separators. False if not.
+  See `clojure-util.util-test/not-more-than-one-decimal-separator-test` for examples."
+  [s]
+  (let [decimal-separator? #{\. \,}]
+    (->
+      (filter decimal-separator? s)
+      count
+      (<= 1))))
+
+(defn one-or-more-digit?
+  "Returns true if a string contains one or more digits. False if not.
+  See `clojure-util.util-test/one-or-more-digit-test` for examples."
+  [s]
+  (->
+    (filter #(Character/isDigit %) s)
+    count
+    (>= 1)))
+
+(defn not-more-than-one-negative-sign?
+  "Returns true if a string contains one or less negative signs. False if not.
+  See `clojure-util.util-test/not-more-than-one-negative-sign-test` for examples."
+  [s]
+  (let [negative-sing? #{\-}]
+    (->
+      (filter negative-sing? s)
+      count
+      (<= 1))))
+
 (defn valid-number-string?
   "Returns true if a string is a valid number and false if it is not a valid number.
-  For example:
-  (valid-number-string? \"2.1\")
-  => true
-  (valid-number-string? \"-2.1\")
-  => true
-  (valid-number-string? \"-\")
-  => false
-  (valid-number-string? \"-1.1.\")
-  => false"
+  `\".\"` and `\",\"` are admitted as decimal separators.
+  Empty strings are accepted
+  See `clojure-util.util-test/valid-number-string-test` for examples.
+"
   [number-str]
   (let [ans (-> number-str
                 (string/replace #"," ".")
                 (string/replace #"'" ".")
-                (string/replace #" " ""))]
-    (and (->> ans
-              (map #(or (Character/isDigit %)
-                        (= "." (str %))
-                        (and (= "-" (str %))
-                             (string/starts-with? ans "-")
-                             (> (count ans) 1))))
-              (every? true?))
-         (->> ans
-              (map #(= "." (str %)))
-              (remove false?)
-              count
-              (> 2))
-         (->> ans
-              (map #(= "-" (str %)))
-              (remove false?)
-              count
-              (> 2)))))
+                (string/replace #" " "")
+                string/trim)]
+    (or
+      (empty? ans)
+      (and
+        (one-or-more-digit? ans)
+        (->> ans
+             (map #(or (Character/isDigit %)
+                       (= "." (str %))
+                       (and (= "-" (str %))
+                            (string/starts-with? ans "-")
+                            (> (count ans) 1))))
+             (every? true?))
+        (not-more-than-one-decimal-separator? ans)
+        (not-more-than-one-negative-sign? ans)))))
 
 (defn number-ans-val
   "Converts string to number, only in case input is a valid number.
