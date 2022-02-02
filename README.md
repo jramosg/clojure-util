@@ -2,7 +2,7 @@
 
 Clojure utils in `clojure-util.util` namespace
 
-Datomic utils in 
+Datomic examples in `datomic-examples.datomic-examples` namespace
 
 ## Installation
 
