@@ -153,9 +153,27 @@
       (string/replace "}" "")
       (string/replace "\t" "")))
 
-
 (defn vector-from-txt
   "Reads a txt file and converts each line of the txt as an element in a vector"
   [filename]
   (with-open [rdr (io/reader filename)]
     (vec (line-seq rdr))))
+
+(defn every-val-of-map-to-str
+  "Converts every value of the map to a string.
+  For example:
+  ```
+  (every-val-of-map-to-str {:unit \"µl\",
+                            :max-value 1200.0,
+                            :min-value {:man 1000
+                                        :woman 1100}})
+  => {:unit \"µl\", :max-value \"1200.0\", :min-value {:man \"1000\", :woman \"1100\"}}```"
+  [m]
+  (into
+    {}
+    (map
+      (fn [[e1 e2 :as v]]
+        (if (map? (second v))
+          {e1 (every-val-of-map-to-str e2)}
+          (update v 1 str)))
+      m)))
