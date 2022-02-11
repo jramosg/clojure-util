@@ -169,11 +169,13 @@
                                         :woman 1100}})
   => {:unit \"µl\", :max-value \"1200.0\", :min-value {:man \"1000\", :woman \"1100\"}}```"
   [m]
-  (into
-    {}
-    (map
-      (fn [[e1 e2 :as v]]
-        (if (map? (second v))
-          {e1 (every-val-of-map-to-str e2)}
-          (update v 1 str)))
-      m)))
+  (if (map? m)
+    (into
+      {}
+      (map
+        (fn [[e1 e2 :as v]]
+          (if (map? (second v))
+            {e1 (every-val-of-map-to-str e2)}
+            (update v 1 str)))
+        m))
+    (prn "WARNING! Input should be a map")))

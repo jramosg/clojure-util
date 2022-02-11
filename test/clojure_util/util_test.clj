@@ -75,4 +75,23 @@
      (is (false? (util/valid-number-string? "1,1.")))
      (is (false? (util/valid-number-string? "."))))))
 
+(deftest every-val-of-map-to-str-test
+  (testing "Check that every value of a map is converted to string"
+    (is
+      (=
+        (util/every-val-of-map-to-str
+          {:unit "µl"
+           :max-value 1200.0
+           :min-value {:man 1000 :woman 1100}})
+        {:unit "µl"
+         :max-value "1200.0"
+         :min-value {:man "1000" :woman "1100"}}))
+    (is
+      (=
+        (util/every-val-of-map-to-str
+          {:name "Jon"
+           :liken-fruits ["apple" "banana"]})
+        {:name "Jon"
+         :liken-fruits (str ["apple" "banana"])}))))
+
 (run-tests)
