@@ -92,6 +92,24 @@
           {:name "Jon"
            :liken-fruits ["apple" "banana"]})
         {:name "Jon"
-         :liken-fruits (str ["apple" "banana"])}))))
+         :liken-fruits (str ["apple" "banana"])}))
+    (is
+      (=
+        (util/every-val-of-map-to-str
+          [{:name "Jon"
+            :liked-fruits ["apple" "banana"]}])
+        nil))
+    (is
+      (=
+        (mapv
+          util/every-val-of-map-to-str
+          [{:name "Jon"
+            :liked-fruits ["apple" "banana"]}
+           {:name "Ane"
+            :liked-fruits ["orange"]}])
+        [{:name "Jon"
+          :liked-fruits (str ["apple" "banana"])}
+         {:name "Ane"
+          :liked-fruits (str ["orange"])}]))))
 
 (run-tests)
