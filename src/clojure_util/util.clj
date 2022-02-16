@@ -153,6 +153,16 @@
       (string/replace "}" "")
       (string/replace "\t" "")))
 
+(defn read-file-and-create-if-needed [path]
+  (try
+    (io/reader path)
+    (catch
+      java.io.FileNotFoundException _
+      (prn "Creating file " path)
+      (spit path "")
+      (prn "Created file " path)
+      (io/reader path))))
+
 (defn vector-from-txt
   "Reads a txt file and converts each line of the txt as an element in a vector"
   [filename]
