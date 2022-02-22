@@ -25,3 +25,8 @@
       [?c :db/ident ?card]]
     db))
 
+(defn change-cardinality
+  "This example changes cardinality of :user/favourite-fruits to many"
+  []
+  @(d/transact conn [{:db/id :user/favourite-fruits
+                      :db/cardinality :db.cardinality/many}]))
