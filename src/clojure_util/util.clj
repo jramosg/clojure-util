@@ -13,7 +13,6 @@
                            keywords-to-rename)]
     (set/rename-keys my-map (zipmap keywords-to-rename new-keywords))))
 
-
 (defn not-more-than-one-decimal-separator?
   "Returns true if a string contains one or less decimal separators. False if not.
   See `clojure-util.util-test/not-more-than-one-decimal-separator-test` for examples."
@@ -28,20 +27,16 @@
   "Returns true if a string contains one or more digits. False if not.
   See `clojure-util.util-test/one-or-more-digit-test` for examples."
   [s]
-  (->
-    (filter #(Character/isDigit %) s)
-    count
-    (>= 1)))
+  (boolean (some #(Character/isDigit %) s)))
 
 (defn not-more-than-one-negative-sign?
   "Returns true if a string contains one or less negative signs. False if not.
   See `clojure-util.util-test/not-more-than-one-negative-sign-test` for examples."
   [s]
-  (let [negative-string? #{\-}]
-    (->
-      (filter negative-string? s)
-      count
-      (<= 1))))
+  (->
+    (filter #{\-} s)
+    count
+    (<= 1)))
 
 (defn valid-number-string?
   "Returns true if a string is a valid number and false if it is not a valid number.
@@ -104,7 +99,7 @@
   (round-with-n-decimals 1 10.46)
   => 10.5"
   [n value]
-  (if-not (empty? (str value))
+  (if (seq (str value))
     (let [value (if (double? value)
                   value
                   (double value))
@@ -123,14 +118,12 @@
          (count numbers-coll))
       0)))
 
-
 (defn deaccent
   "Remove accent from string.
    For example: (deaccent \"Policía\")->\"Policia\""
   [str]
   (let [normalized (java.text.Normalizer/normalize str java.text.Normalizer$Form/NFD)]
     (string/replace normalized #"\p{InCombiningDiacriticalMarks}+" "")))
-
 
 (defn normalize-string
   "Normalize string"

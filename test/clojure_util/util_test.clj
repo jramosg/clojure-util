@@ -75,6 +75,13 @@
      (is (false? (util/valid-number-string? "1,1.")))
      (is (false? (util/valid-number-string? "."))))))
 
+(deftest round-with-n-decimals-test
+  (testing "Testing that numbers are round correctly and with specified decimals"
+    (is (= 12.34 (util/round-with-n-decimals 2 12.344)))
+    (is (= 12 (util/round-with-n-decimals 0 12.344)))
+    (is (= 12.7 (util/round-with-n-decimals 1 12.674)))
+    (is (nil? (util/round-with-n-decimals 0 nil)))))
+
 (deftest every-val-of-map-to-str-test
   (testing "Check that every value of a map is converted to string"
     (is
