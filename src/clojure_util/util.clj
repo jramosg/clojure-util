@@ -182,3 +182,14 @@
             (update v 1 str)))
         m))
     (prn "WARNING! Input should be a map")))
+
+(defn index-by
+  "Returns a map of the elements of `coll` keyed by the result of `f` on each
+  element.  The value at each key will be a single element (in contrast to
+  `clojure.core/group-by`).  Therefore `f` should generally return an unique
+  key for every element - otherwise elements get discarded."
+  [f coll]
+  (persistent!
+    (reduce
+      (fn [ret x] (assoc! ret (f x) x))
+      (transient {}) coll)))

@@ -70,10 +70,10 @@
       (is (true? (util/valid-number-string? "-2.1")))
       (is (true? (util/valid-number-string? "-2,1"))))
     (testing "Invalid numbers"
-     (is (false? (util/valid-number-string? "-")))
-     (is (false? (util/valid-number-string? "-1.1.")))
-     (is (false? (util/valid-number-string? "1,1.")))
-     (is (false? (util/valid-number-string? "."))))))
+      (is (false? (util/valid-number-string? "-")))
+      (is (false? (util/valid-number-string? "-1.1.")))
+      (is (false? (util/valid-number-string? "1,1.")))
+      (is (false? (util/valid-number-string? "."))))))
 
 (deftest round-with-n-decimals-test
   (testing "Testing that numbers are round correctly and with specified decimals"
@@ -118,5 +118,10 @@
           :liked-fruits (str ["apple" "banana"])}
          {:name "Ane"
           :liked-fruits (str ["orange"])}]))))
+
+(deftest index-by-test
+  (testing "`index-by fn returns a new map with the elements of `coll` keyed by the result of `f``."
+    (is (= (util/index-by :id [{:id 1 :questions [1 2 3]} {:id 2 :questions [1 2 4]}])
+           {1 {:id 1, :questions [1 2 3]}, 2 {:id 2, :questions [1 2 4]}}))))
 
 (run-tests)
