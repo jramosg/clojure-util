@@ -124,4 +124,10 @@
     (is (= (util/index-by :id [{:id 1 :questions [1 2 3]} {:id 2 :questions [1 2 4]}])
            {1 {:id 1, :questions [1 2 3]}, 2 {:id 2, :questions [1 2 4]}}))))
 
+(deftest sort-by-reverse-test
+  (testing "Returns a sorted sequence of the items in coll in the revers way of `(sort-by keyfn coll)`"
+    (let [test-data (mapv (fn [_] {:random-number (rand 30)}) (range 30))]
+      (is (= (reverse (sort-by :random-number test-data))
+             (util/sort-by-reverse :random-number test-data))))))
+
 (run-tests)

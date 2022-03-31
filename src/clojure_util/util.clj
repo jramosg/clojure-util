@@ -193,3 +193,10 @@
     (reduce
       (fn [ret x] (assoc! ret (f x) x))
       (transient {}) coll)))
+
+(defn sort-by-reverse
+  "Returns a reversed sorted sequence of the items in coll.
+  Guaranteed to be stable: equal elements will not be reordered.  If coll is a
+  Java array, it will be modified. To avoid this, sort a copy of the array."
+  [keyfn coll]
+  (sort-by keyfn #(compare %2 %1) coll))
