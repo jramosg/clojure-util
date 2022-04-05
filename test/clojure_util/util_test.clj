@@ -130,4 +130,19 @@
       (is (= (reverse (sort-by :random-number test-data))
              (util/sort-by-reverse :random-number test-data))))))
 
+(deftest if-seq-let-test
+  (testing "macro if-seq-let"
+    (is (= (let [a []] (if (seq a) "true-test" "false-test"))
+           (if-let [a (seq [])] "true-test" "false-test")
+           (util/if-seq-let [a []] "true-test" "false-test")))
+    (is (= (let [a [1]] (if (seq a) "true-test" "false-test"))
+           (if-let [a (seq [1])] "true-test" "false-test")
+           (util/if-seq-let [a [1]] "true-test" "false-test")))
+    (is (= (let [a []] (when (seq a) "true-test"))
+           (when-let [a (seq [])] "true-test")
+           (util/when-seq-let [a []] "true-test")))
+    (is (= (let [a [1]] (when (seq a) "true-test"))
+           (when-let [a (seq [1])] "true-test")
+           (util/when-seq-let [a [1]] "true-test")))))
+
 (run-tests)

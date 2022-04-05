@@ -200,3 +200,46 @@
   Java array, it will be modified. To avoid this, sort a copy of the array."
   [keyfn coll]
   (sort-by keyfn #(compare %2 %1) coll))
+
+
+(defmacro ^{:private true} assert-args
+  [& pairs]
+  `(do (when-not ~(first pairs)
+         (throw (IllegalArgumentException.
+                  (str (first ~'&form) " requires " ~(second pairs) " in " ~'*ns* ":" (:line (meta ~'&form))))))
+       ~(let [more (nnext pairs)]
+          (when more
+            (list* `assert-args more)))))
+
+(defmacro if-seq-let
+  "bindings => binding-form test
+
+  If test is seq, evaluates then with binding-form bound to the value of
+  test, if not, yields else"
+  ([bindings then]
+   `(if-let ~bindings ~then nil))
+  ([bindings then else & oldform]
+   (assert-args
+     (vector? bindings) "a vector for its binding"
+     (nil? oldform) "1 or 2 forms after binding vector"
+     (= 2 (count bindings)) "exactly 2 forms in binding vector")
+   (let [form (bindings 0) tst (bindings 1)]
+     `(let [temp# ~tst]
+        (if (seq temp#)
+          (let [~form temp#]
+            ~then)
+          ~else)))))
+
+(defmacro when-seq-let
+  "bindings => binding-form test
+
+  When test is seq, evaluates body with binding-form bound to the value of test"
+  [bindings & body]
+  (assert-args
+    (vector? bindings) "a vector for its binding"
+    (= 2 (count bindings)) "exactly 2 forms in binding vector")
+  (let [form (bindings 0) tst (bindings 1)]
+    `(let [temp# ~tst]
+       (when (seq temp#)
+         (let [~form temp#]
+           ~@body)))))
